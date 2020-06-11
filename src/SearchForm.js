@@ -17,12 +17,7 @@ const SearchForm = ({ onSearchSubmission }) => {
           type="text"
           placeholder="Morceau, ex : Billie Jean"
         />
-        <IconButton
-          variant="contained"
-          color="primary"
-          disableElevation
-          type="submit"
-        >
+        <IconButton variant="contained" color="primary" type="submit">
           <SearchIcon />
         </IconButton>
       </form>

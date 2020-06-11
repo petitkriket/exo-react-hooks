@@ -8,7 +8,7 @@ import SearchSortButton from "./SearchSortButton";
 const spotifyAPICall = (queryValue, offset = 0) => {
   const query = encodeURI(queryValue);
   const token =
-    "BQA-z8mkxWpCMpWvDvLiSL-Qt9-Mo7BnqvsC1EY5ksdk_4kzOwe7u0XrdgPcQtUlnbeNJj5FS-I7P9q8anRBuNhHYVugd6DxdyLroKXLjzKc7dYzMzm_c2_t4Cjy_h-EyMB2kvyn67iO3K-F2ajPw9g";
+    "BQAHWOpw7KzXw0P3YX_xjnj_c0vlFYnVPcOUgmSP4zvTr2EN6hY23U9p29HK-b06ftbtM2ExaQX1eHeSntXzaXeHiwAEX4la5kPLW8yAXHSr3rrIVFwqYrf6k7BHxhg-h_gtFUh03c5n6ouC3YmfGsc";
   var myHeaders = new Headers();
   myHeaders.append("Accept", "application/json");
   myHeaders.append("Content-Type", "application/json");
@@ -50,15 +50,20 @@ function App() {
     );
   }, [favoritesTracks]);
 
-  const handleSearch = (queryValue, offset = 0) => {
-    setTrackName(queryValue);
-    spotifyAPICall(queryValue, offset)
+  // fait un call des le mount du composant et pas seulement au submit du form de recherche ?
+  React.useEffect(() => {
+    spotifyAPICall(trackName, resultOffset)
       .then((res) => {
         setTracks(res.tracks.items);
-        resultCount(res.tracks.total);
+        setResultCount(res.tracks.total);
         setresultOffset(res.tracks.offset);
       })
       .catch((err) => {});
+  }, [trackName, resultOffset, resultCount]);
+
+  const handleSearch = (queryValue, offset = 0) => {
+    setTrackName(queryValue);
+    setresultOffset(offset);
   };
 
   const sortResultsByArtistName = () => {
@@ -99,7 +104,7 @@ function App() {
     setFavoritesTracks(newTrackList);
   };
 
-  const paginate = (offset) => {
+  const paginateResults = (offset) => {
     handleSearch(trackName, offset * 10);
   };
   return (
@@ -119,7 +124,7 @@ function App() {
         <SearchResultsPagination
           resultCount={resultCount}
           offset={resultOffset}
-          onPaginationClick={paginate}
+          onPaginationClick={paginateResults}
         />
       </div>
       <main className="search-results row">
