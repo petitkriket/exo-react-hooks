@@ -52,6 +52,8 @@ function App() {
 
   // fait un call des le mount du composant et pas seulement au submit du form de recherche ?
   React.useEffect(() => {
+    if (!trackName) return;
+
     spotifyAPICall(trackName, resultOffset)
       .then((res) => {
         setTracks(res.tracks.items);
